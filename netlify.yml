@@ -1,0 +1,29 @@
+build:
+  publish: dist    # Directory to publish (adjust as needed)
+  command: |
+    npm install      # Install Node.js dependencies (if applicable)
+    pip install -r requirements.txt    # Install Python dependencies
+    chmod +x *       # Make all files executable
+    python3 grp.py   # Run the Python script
+    npm run build    # Build the project
+
+functions:
+  node_bundler: esbuild
+
+environment:
+  NODE_VERSION: "18.17.0"
+  PYTHON_VERSION: "3.8"    # Specify the Python version if required
+
+redirects:
+  - from: "/*"
+    to: "/index.html"
+    status: 200
+
+headers:
+  - for: "/*"
+    values:
+      Cache-Control: "public, max-age=31536000, immutable"
+
+plugins:
+  - package: "@netlify/plugin-functions-install-core"
+  
